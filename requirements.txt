@@ -1,0 +1,2 @@
+# Streamlit Community Cloud installs this file; it installs the package itself with its dependencies.
+-e .

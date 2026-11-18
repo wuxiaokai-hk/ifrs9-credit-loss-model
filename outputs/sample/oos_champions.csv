@@ -1,0 +1,6 @@
+segment,champion,oos_rmse_pp,gfc_capture_pct,rule_met
+commercial_re,"Fed CRE-style (prices, UR)",0.2549979594639244,102.23119529903956,True
+consumer,ECB/EBA core satellite,0.3377841026814414,95.46450959723178,True
+heloc,ECB/EBA core satellite,0.11803982744047359,147.7374662294623,True
+mortgage_insured,ECB/EBA core satellite,0.08237716227890872,83.6855948266714,True
+mortgage_uninsured,ECB/EBA core satellite,0.06300939354750386,127.68070649614874,True

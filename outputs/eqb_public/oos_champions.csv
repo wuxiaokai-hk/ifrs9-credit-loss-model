@@ -1,0 +1,5 @@
+segment,champion,oos_rmse_pp,gfc_capture_pct,rule_met
+commercial,BMA,1.4812911932527408,336.1323460415144,False
+credit_cards,BMA,0.9831865316544478,88.04589339944127,True
+mortgage_insured,BoC TDSA-style ARDL,0.0663421467566857,123.62265251944171,True
+mortgage_uninsured,BoC TDSA-style ARDL,0.0663421467566857,123.62265251944171,True
