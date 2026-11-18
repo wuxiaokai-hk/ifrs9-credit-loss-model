@@ -1,0 +1,11 @@
+segment,ltv_bucket,balance,current_ltv,undrawn,remaining_amort_years,prepay_rate,stage2_share,stage3_share,first_lien_ltv
+mortgage_uninsured,SF 0-50,2121746200.0000002,0.45,0.0,23,0.12,0.204,0.019,0.0
+mortgage_uninsured,SF 50-65,4243492400.0000005,0.6,0.0,23,0.12,0.204,0.019,0.0
+mortgage_uninsured,SF 65-75,7426111699.999999,0.71,0.0,23,0.12,0.204,0.019,0.0
+mortgage_uninsured,SF 75-80,7426111699.999999,0.78,0.0,23,0.12,0.204,0.019,0.0
+mortgage_uninsured,Decumulation,3328640000.0,0.35,0.0,23,0.12,0.204,0.019,0.0
+mortgage_insured,SF insured,5870845000.0,0.8,0.0,23,0.1,0.15,0.016,0.0
+mortgage_insured,Multi-unit insured,3116885000.0,0.75,0.0,30,0.05,0.15,0.016,0.0
+credit_cards,PC Financial cards,4523886000.0,,9047772000.0,3,0.0,0.12,0.0,0.0
+commercial,Commercial loans,10018402000.0,0.65,0.0,6,0.15,0.117,0.053,0.0
+commercial,Equipment financing,1118028000.0,0.65,0.0,3,0.1,0.117,0.053,0.0

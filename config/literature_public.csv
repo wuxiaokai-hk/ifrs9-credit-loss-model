@@ -1,0 +1,7 @@
+mnemonic,description,category,transforms,sign_household,sign_us,evidence,primary
+LBR_CA,"Unemployment rate, Canada (SA, COVID-bridged)",Labour market,level|d4,+,0,"BoC SAP 2026-12 (labour market the central driver of arrears); BoC TDSA eq. 25; ECB/EBA satellites",household
+HPI_CA,"Residential property prices, Canada (BIS)",Housing,yoy,-,0,"BoC SAP 2026-12 (y/y HPI lagged 12m); BoC TDSA eq. 25; Fed first-lien model via updated LTV",household
+R3M,"3-month interbank rate, Canada",Interest rates,level|d4,+,0,"BoC SAP 2026-12 (policy-rate channel, SVAR ordering)",
+R10Y,"10-year Government of Canada yield",Interest rates,level|d4,+,0,"BoC SAP 2026-12 (5-year mortgage rate, 100bp -> +3-5bp arrears after 2 years); mortgage rates price off 5-10y GoC",household
+GDPR_CA,"Real GDP, Canada (index)",Activity,yoy,-,0,"BoC TDSA eq. 25; ECB/EBA satellites",
+LBR_US,"Unemployment rate, US (SA, COVID-bridged)",Labour market,level|d4,0,+,"Fed CLASS (Hirtle et al. 2016); FRB charge-off models; used only for US-estimated card and business satellites",us

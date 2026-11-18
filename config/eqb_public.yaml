@@ -1,0 +1,150 @@
+# ---------------------------------------------------------------------------
+# Public-data configuration. Build inputs with `creditloss build-data`,
+# then `creditloss run --config config/eqb_public.yaml --backtest`.
+# Jump-off book: EQB Inc., July 31, 2026. Macro history to 2026Q2.
+# ---------------------------------------------------------------------------
+paths:
+  macro_history: data/eqb_public/macro_history.csv
+  macro_scenarios: data/eqb_public/macro_scenarios.csv
+  portfolio_history: data/eqb_public/portfolio_history.csv
+  portfolio_snapshot: data/eqb_public/portfolio_snapshot.csv
+  literature_table: config/literature_public.csv
+  outputs: outputs/eqb_public
+  cache: .cache/eqb_public
+
+columns:
+  date: date
+  segment: segment
+  balance: balance
+  undrawn: undrawn
+  default_rate: default_rate        # here: PROXY rate (CBA 90+ arrears % / US charge-off %)
+  nco_rate: nco_rate
+  loss_rate_on_default: lgd_realized
+  insured_share: insured_share
+
+collateral_index: HPI_CA
+
+segments:
+  mortgage_uninsured:
+    contractual_term_years: 2.5     # assumed: remaining term to renewal = maximum contractual period (5.5.19)
+    workout_quarters: 6             # Ontario power-of-sale timeline (assumed)
+    reported_acl: 63200000             # EQB Stage 1+2 ACL, Jul 31, 2026 (for reconciliation in the app)
+    label: Single-family uninsured + decumulation
+    lgd_model: structural_ltv
+    ead_model: amortizing
+    sign_priors: household
+    candidates: [LBR_CA, HPI_CA, R3M, R10Y, GDPR_CA]
+    proxy: CBA Ontario mortgages 90+ days in arrears (% of count)
+    jumpoff_pd: 1.7                 # annual %, EQB: impaired formations / uninsured loans (see report)
+    sale_cost: 0.07
+    forced_sale_discount: 0.10
+    workout_cost: 0.03
+    contract_rate: 0.055
+    cure_rate: 0.40
+  mortgage_insured:
+    contractual_term_years: 3.0     # assumed remaining term to renewal
+    workout_quarters: 6
+    reported_acl: 1200000             # EQB Stage 1+2 ACL, Jul 31, 2026 (for reconciliation in the app)
+    label: Single-family and multi-unit insured
+    lgd_model: insured
+    ead_model: amortizing
+    sign_priors: household
+    candidates: [LBR_CA, HPI_CA, R3M, R10Y, GDPR_CA]
+    proxy: CBA Ontario mortgages 90+ days in arrears (% of count)
+    jumpoff_pd: 1.3
+    insurer_coverage: 1.0
+    residual_cost: 0.01
+    contract_rate: 0.045
+    cure_rate: 0.40
+  credit_cards:
+    workout_quarters: 2             # charged off at 180 days
+    reported_acl: 239838000             # EQB Stage 1+2 ACL, Jul 31, 2026 (for reconciliation in the app)
+    label: Credit cards (PC Financial)
+    lgd_model: fixed
+    ead_model: revolving
+    sign_priors: us
+    candidates: [LBR_US]
+    proxy: US commercial banks credit-card charge-off rate (FRED CORCCACBS)
+    jumpoff_pd: null                # solved so that probability-weighted Stage 1+2 ACL = reported
+    target_acl: 239838000           # EQB Stage 1+2 ACL on credit cards, Jul 31, 2026 (net of cash reserves)
+    lifetime_years: 3               # behavioural life for Stage 2 lifetime ECL on revolving cards
+    fixed_lgd: 0.85
+    ccf: 0.25
+    cure_rate: 0.05
+  commercial:
+    contractual_term_years: 3.0     # assumed remaining term
+    workout_quarters: 6
+    reported_acl: 95600000             # EQB Stage 1+2 ACL, Jul 31, 2026 (for reconciliation in the app)
+    label: Commercial loans + equipment financing
+    lgd_model: frye_jacobs
+    ead_model: amortizing
+    sign_priors: us
+    candidates: [LBR_US]
+    proxy: US commercial banks business-loan charge-off rate (FRED CORBLACBS)
+    jumpoff_pd: 3.4
+    fixed_lgd: 0.15                 # long-run LGD: EQB Stage 3 ACL covers 6% of gross impaired (well secured)
+    asset_corr: 0.15
+    contract_rate: 0.07
+    cure_rate: 0.20
+
+pd_model:
+  transform: logit
+  include_ar: true
+  max_drivers: 3
+  lags: [0, 1, 2, 3, 4]
+  variable_transforms: [level, d4, yoy]
+  screen_top_n: 40
+  cluster_corr: 0.85
+  primary_ratio: 0.8
+  require_sign_priors: true
+  max_vif: 5
+  min_obs: 40
+  force_categories: []
+  bma: {enabled: true, top_k: 50}
+  stress_weight: 0.0
+  literature_specs:
+    household:
+      BoC SAP 2026-12 style:      {drivers: ["LBR_CA|level|L2", "HPI_CA|yoy|L4", "R10Y|level|L4"], ar: false}
+      BoC TDSA-style ARDL:        {drivers: ["LBR_CA|d4|L0", "HPI_CA|yoy|L0"], ar: true}
+      ECB/EBA core satellite:     {drivers: ["LBR_CA|level|L1", "HPI_CA|yoy|L2", "R10Y|level|L2"], ar: true}
+    us:
+      CLASS-style (UR level):     {drivers: ["LBR_US|level|L1"], ar: true}
+      CLASS-style (UR change):    {drivers: ["LBR_US|d4|L0"], ar: true}
+
+nco_model:
+  enabled: false
+
+ifrs9:
+  sicr_multiple: 3.0
+  lifetime_years: 5
+  no_cure_stage3: true
+  allowance_cover_quarters: 4
+  scenario_weights: {baseline: 0.40, upside: 0.10, downside: 0.30, severe: 0.20}
+  # --- IFRS 9 measurement (creditloss/modelling/ifrs9.py) ---
+  reasonable_supportable_quarters: 12   # scenario PDs used for 3 years, then reversion to the long-run average (B5.5.13)
+  reversion_quarters: 8                 # linear reversion period
+  stage2_pd_multiple: 3.0               # Stage 2 loans default ~3x as often as Stage 1 (consistent with the SICR test)
+  stage2_cure_q: 0.10                   # quarterly cure rate out of Stage 2 (~3-quarter probation)
+  workout_quarters: 4                   # default: quarters from Stage 3 entry to resolution (write-off or cure)
+  discount: true                        # discount expected shortfalls at the effective interest rate (B5.5.44)
+
+ead:
+  balance_sheet: static
+
+horizon_quarters: 13
+jump_off: "2026-06-30"
+
+scenarios: {baseline: baseline, upside: upside, downside: downside, severe: severe}
+
+oos:
+  first_origin: "2004-12-31"
+  step_quarters: 4
+  horizons: [4, 8, 12]
+  stress_windows:
+    - ["2008-09-30", "2010-06-30"]
+    - ["2023-06-30", "2026-06-30"]
+  selection_tolerance: 0.05
+  champion_min_capture: 80
+  champion_max_capture: 200
+
+random_seed: 20261104

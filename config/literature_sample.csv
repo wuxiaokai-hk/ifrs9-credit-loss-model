@@ -1,0 +1,23 @@
+mnemonic,description,category,transforms,sign_household,sign_business,evidence,primary
+LBR_ON,Unemployment rate (Ontario),Labour market,level|d4,+,+,BoC SAP 2026-12 (labour market the central driver; +1pp UR -> +0.1pp arrears after ~1 year); Fed FLARE/CLASS; ECB STAMP€ PD satellites,household|business
+LBR_CA,Unemployment rate (Canada),Labour market,level|d4,+,+,BoC TDSA (TR-128) aggregate PCL eq. 25 uses change in UR,
+JSR_ON,Job separation rate (Ontario),Labour market,level|d4,+,+,"BoC SAP 2026-12 (separation rate, 6-month average)",
+JFR_ON,Job finding rate (Ontario),Labour market,level|d4,-,-,"BoC SAP 2026-12 (finding rate, 6-month average)",
+ET_ON,Employment (Ontario),Labour market,yoy,-,-,Standard satellite regressor; ECB STAMP€,
+HPI_ON,House price index (Ontario),Housing,yoy,-,-,BoC SAP 2026-12 (y/y HPI lagged 12m); BoC TDSA eq. 25; Fed first-lien model via updated LTV,household
+HPI_TOR,House price index (Toronto),Housing,yoy,-,-,Regional variant of HPI,
+PCRE_ON,Commercial property price index,Commercial property,yoy,0,-,Fed CRE model; EBA sectoral CRE shocks,business
+HSTARTS_ON,Housing starts (Ontario),Housing,yoy,-,-,Activity proxy; weak evidence,
+RMORT5,5-year conventional mortgage rate,Interest rates,level|d4,+,+,BoC SAP 2026-12 (100bp -> +3-5bp arrears after 2 years; enters as rate minus neutral),household
+RPOL,Policy rate,Interest rates,level|d4,+,+,BoC SAP 2026-12 SVAR ordering,
+R5Y,5-year GoC yield,Interest rates,level|d4,+,+,BoC TDSA ECM rate equations,
+SPRBBB,BBB corporate spread,Credit conditions,level|d4,+,+,BoC TDSA (corporate non-financial spread); BoC CDM (TR-122),business
+DSR_CA,Household debt service ratio,Household balance sheet,level|d4,+,0,BoC DP 2012-3 / HRAM (TR-106) debt-service channel,
+CPIX_CA,Core CPI inflation,Prices,level,-,0,BoC SAP 2026-12 (nominal debt deflation lowers arrears),household
+GAP_CA,Output gap,Activity,level,-,-,BoC SAP 2026-12 (controls for borrowing conditions),
+GDPR_ON,Real GDP (Ontario),Activity,yoy,-,-,BoC TDSA eq. 25; ECB/EBA satellites,
+YPDR_ON,Real disposable income (Ontario),Household balance sheet,yoy,-,-,Household affordability channel; HRAM,
+TSX,S&P/TSX composite,Financial markets,yoy,-,-,"BoC TDSA eq. 25 (TSX growth, one quarter ahead)",
+INSOLV_CONS_ON,Consumer insolvencies (Ontario),Credit conditions,level|d4,+,0,Coincident distress indicator; use with care (near-tautological with defaults),
+INSOLV_BUS_ON,Business insolvencies (Ontario),Credit conditions,level|d4,0,+,Coincident distress indicator,
+MORTGAP,5-year mortgage rate minus neutral rate (constructed),Interest rates,level,+,+,"BoC SAP 2026-12 eq. 1 uses this gap, lagged 12 months",household

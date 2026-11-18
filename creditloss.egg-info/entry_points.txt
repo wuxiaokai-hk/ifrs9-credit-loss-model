@@ -1,0 +1,2 @@
+[console_scripts]
+creditloss = creditloss.cli:main
