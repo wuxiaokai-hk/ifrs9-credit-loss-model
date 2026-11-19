@@ -129,7 +129,7 @@ def build_snapshot() -> pd.DataFrame:
 
 
 def build_scenarios(m: pd.DataFrame) -> pd.DataFrame:
-    """Four paths from the 2026Q2 jump-off. Author-built (Moody's is not public):
+    """Four paths from the 2026Q2 jump-off. Author-built (commercial vendor scenarios are licensed):
       baseline  unemployment eases slowly, house prices flat then +2%/yr, rates unchanged
       upside    unemployment -0.8pp, house prices +6% over two years
       downside  unemployment +2pp (peak q6), house prices -12% (trough q8), policy cut 100bp

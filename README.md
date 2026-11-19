@@ -1,6 +1,6 @@
 # IFRS 9 Credit-Loss Scenario Model
 
-[![CI](https://github.com/GITHUB_USER/ifrs9-credit-loss-model/actions/workflows/ci.yml/badge.svg)](https://github.com/GITHUB_USER/ifrs9-credit-loss-model/actions/workflows/ci.yml)
+[![CI](https://github.com/wuxiaokai-hk/ifrs9-credit-loss-model/actions/workflows/ci.yml/badge.svg)](https://github.com/wuxiaokai-hk/ifrs9-credit-loss-model/actions/workflows/ci.yml)
 ![Python](https://img.shields.io/badge/python-3.10%2B-blue)
 ![License: MIT](https://img.shields.io/badge/license-MIT-green)
 
@@ -69,7 +69,7 @@ Full write-up: [`docs/eqb_public_report.html`](docs/eqb_public_report.html) · M
 ## Quick start
 
 ```bash
-git clone https://github.com/GITHUB_USER/ifrs9-credit-loss-model.git
+git clone https://github.com/wuxiaokai-hk/ifrs9-credit-loss-model.git
 cd ifrs9-credit-loss-model
 pip install -e ".[dev]"
 
@@ -190,7 +190,7 @@ tests/                 unit and end-to-end tests
   dynamics from US charge-offs. EQB's own loss history is not public.
 - **Assumptions for undisclosed inputs:** the LTV distribution around the disclosed 69% average, remaining terms,
   workout periods and card limits are assumed and marked as such.
-- **Author-built scenarios:** Moody's and supervisory scenarios are not public.
+- **Author-built scenarios:** commercial vendor scenarios are licensed and supervisory scenarios for Canada are not public, so the scenarios here are built by the author.
 - **One stress episode** for Canadian mortgages since 1996, so out-of-sample tests have little power. Most
   Diebold-Mariano differences are not significant at 5%.
 

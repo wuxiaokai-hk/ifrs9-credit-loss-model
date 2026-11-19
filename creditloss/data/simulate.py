@@ -5,7 +5,7 @@ recessions placed where Canada had them (1990-92, 2001, 2008-09, 2020) and a rat
 shock in 2022-23. Portfolio default and loss rates are generated from a known
 data-generating process (DGP) so the pipeline can be checked for recovering it.
 
-Replace the four CSVs in data/ with Moody's history/scenarios and the credit
+Replace the four CSVs in data/ with your macro history/scenarios and the credit
 union's own portfolio extracts; keep the column names in config/sample.yaml.
 """
 from __future__ import annotations
@@ -106,7 +106,7 @@ def simulate_macro(rng: np.random.Generator) -> pd.DataFrame:
         "INSOLV_CONS_ON": insolv_c, "INSOLV_BUS_ON": insolv_b,
         "D_COVID": covid,
     })
-    # Filler variables, the way a Moody's file has hundreds of cycle-correlated series.
+    # Filler variables, the way a commercial vendor file has hundreds of cycle-correlated series.
     fillers = {
         "RETAIL_ON": 1.0, "MFGSHIP_ON": 1.8, "EXPORTS_CA": 2.2, "POIL": 4.0, "FXUSCAD": 0.4,
         "LBR_US": 0.9, "GDPR_US": 1.0, "HOURS_ON": 0.5, "WAGE_ON": 0.3, "POP_ON": 0.05,
@@ -211,7 +211,7 @@ def simulate_snapshot(rng: np.random.Generator) -> pd.DataFrame:
 
 
 def simulate_scenarios(macro: pd.DataFrame, rng: np.random.Generator, n: int = 24) -> pd.DataFrame:
-    """Four Moody's-style paths from the jump-off. Shapes, not forecasts."""
+    """Four vendor-style paths from the jump-off. Shapes, not forecasts."""
     last = macro.iloc[-1]
     dates = pd.period_range(pd.Period(macro["date"].iloc[-1], "Q") + 1, periods=n, freq="Q").to_timestamp(how="end").normalize()
     h = np.arange(1, n + 1)

@@ -5,7 +5,7 @@
 # ---------------------------------------------------------------------------
 
 paths:
-  macro_history: data/sample/macro_history.csv        # quarterly, one column per Moody's mnemonic
+  macro_history: data/sample/macro_history.csv        # quarterly, one column per macro series code (e.g. a vendor mnemonic)
   macro_scenarios: data/sample/macro_scenarios.csv    # long format: scenario, date, <mnemonics>
   portfolio_history: data/sample/portfolio_history.csv  # quarterly, one row per date x segment
   portfolio_snapshot: data/sample/portfolio_snapshot.csv  # jump-off book: segment x LTV bucket
@@ -140,7 +140,7 @@ horizon_quarters: 13               # Fed uses 9 quarters (13 for losses); BoE 5 
 jump_off: "2026-09-30"
 
 scenarios:
-  # Names as they appear in macro_scenarios.csv. Map Moody's S0-S4 here.
+  # Names as they appear in macro_scenarios.csv. Map your scenario names (e.g. a vendor S0-S4 set) here.
   baseline: baseline
   upside: upside
   downside: downside

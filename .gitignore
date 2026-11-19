@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+*.egg-info/
+agent_runs/
+trace.html
+trace_calls/
+.pytest_cache/
+.DS_Store

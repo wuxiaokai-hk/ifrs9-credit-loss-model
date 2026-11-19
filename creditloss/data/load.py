@@ -9,7 +9,7 @@ def _quarter_end(s: pd.Series) -> pd.DatetimeIndex:
 
 
 def add_constructed(macro: pd.DataFrame) -> pd.DataFrame:
-    """Series the literature uses that Moody's does not publish directly."""
+    """Series the literature uses that macro vendors do not usually publish directly."""
     m = macro.copy()
     if {"RMORT5", "RNEUTRAL"} <= set(m.columns):
         m["MORTGAP"] = m["RMORT5"] - m["RNEUTRAL"]

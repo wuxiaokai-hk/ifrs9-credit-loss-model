@@ -258,7 +258,7 @@ It wins on forecast record, but a validator would ask for that term to be defend
 the central driver) or replaced.</p>
 
 <h2>5. Scenario results</h2>
-<h3>Scenario design (simulated, Moody's-style paths)</h3>
+<h3>Scenario design (simulated, vendor-style paths)</h3>
 {table(pd.concat([scen_tbl, jo.to_frame().T]), "{:.1f}")}
 <p>The severe path is calibrated to the size of the BoE's 2025 shock (house prices −28%) with Ontario unemployment
 rising about 4 points, BBB spreads widening 2.6 points and the policy rate cut.</p>
@@ -301,9 +301,9 @@ recalibrating to realized recoveries.</p>
 
 <h2>6. Limitations and next steps with real data</h2>
 <ul>
-<li>Replace simulated files with Moody's history and S0-S4 scenarios, and the credit union's default, charge-off and recovery history by segment. Check that the default-rate definition (new 90+ / impaired flow) matches what was reported historically.</li>
+<li>Replace simulated files with your macro history and scenarios (e.g. a vendor S0-S4 set), and the credit union's default, charge-off and recovery history by segment. Check that the default-rate definition (new 90+ / impaired flow) matches what was reported historically.</li>
 <li>Calibrate LGD parameters (selling cost, distressed discount, cure rate, workout cost) to realized recoveries, and the LTV-risk slope to observed default rates by LTV band.</li>
-<li>Credit-union histories are short and few downturns are in them; pooling with sector data (FSRA filings, CBA arrears) or a panel across credit unions, as the BoC does across provinces, would stabilise the satellites.</li>
+<li>Credit-union histories are short and few downturns are in them; pooling with sector data (provincial regulator filings, CBA arrears) or a panel across credit unions, as the BoC does across provinces, would stabilise the satellites.</li>
 <li>Add the 2020-21 deferral intervention before trusting any coefficient estimated through that period.</li>
 <li>Second-round effects (credit tightening feeding back into the economy) and the solvency-liquidity link are outside scope, as they are in TDSA.</li>
 </ul>
