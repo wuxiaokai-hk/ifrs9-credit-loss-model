@@ -79,6 +79,15 @@ creditloss run --config config/eqb_public.yaml --backtest --report   # re-valida
 pytest -q                                                      # 25 tests
 ```
 
+Without the `creditloss` command, the same pipeline runs as a plain script, `run_pipeline.py`. Its defaults sit in a
+SETTINGS block at the top of the file, and flags override them:
+
+```bash
+python run_pipeline.py                                   # EQB book, validated PD models, HTML report
+python run_pipeline.py --config config/sample.yaml       # simulated credit-union book
+python run_pipeline.py --build-data --backtest --report  # everything, from the raw public files
+```
+
 Or with Docker: `docker build -t creditloss . && docker run -p 8501:8501 creditloss`.
 
 **Host it for free on Streamlit Community Cloud:** push the repository to GitHub, open
