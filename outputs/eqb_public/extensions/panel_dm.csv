@@ -1,0 +1,9 @@
+segment,h,model,dm_stat,p_value,better_than_ar
+mortgage (Ontario arrears),4,Ontario: UR + HPI,-1.0456599659481098,0.3103592528682695,True
+mortgage (Ontario arrears),4,Ontario: UR + HPI + payment shock,-0.8442577373965694,0.4102493252683175,True
+mortgage (Ontario arrears),4,Panel: UR + HPI,0.4478081305449198,0.6599457549463099,False
+mortgage (Ontario arrears),4,Panel: UR + HPI + Ontario payment shock,0.23593048460752422,0.8163055922955254,False
+mortgage (Ontario arrears),8,Ontario: UR + HPI,-1.0478920013359463,0.3102607024805313,True
+mortgage (Ontario arrears),8,Ontario: UR + HPI + payment shock,-0.4814819503697219,0.6366930533248869,True
+mortgage (Ontario arrears),8,Panel: UR + HPI,-0.1587142620284906,0.8758800367214048,True
+mortgage (Ontario arrears),8,Panel: UR + HPI + Ontario payment shock,-0.5969011890245505,0.5589258763943932,True

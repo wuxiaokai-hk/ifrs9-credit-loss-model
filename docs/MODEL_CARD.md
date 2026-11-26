@@ -123,7 +123,20 @@ Otherwise, the model with capture closest to 100%.
 The Stage 1+2 gap comes from discounting, short contractual lifetimes and the absence of an overlay. It is left visible
 rather than calibrated away.
 
-**5.4 Automated tests (25, run in CI).**
+**5.4 Challenger models and further checks** (`creditloss extensions`; full tables in
+`outputs/eqb_public/extensions/`).
+- **Payment shock and provincial panel:** five regions (Atlantic, Quebec, Ontario, Alberta, BC), region fixed effects,
+  date-clustered errors. The renewal payment shock is significant only for Ontario. Out of sample, Ontario arrears
+  RMSE (1-12 quarters): AR(1) 0.070, Ontario UR+HPI 0.055, panel with Ontario payment shock 0.061; no difference is
+  significant. Estimated to 2022Q4, every model forecasts 0.14-0.17% for 2026Q2 against 0.32% actual.
+- **Loss distribution:** severe 13-quarter loss 90% range C$1.00-2.32bn around a C$1.46bn point estimate.
+- **Reverse stress:** C$2bn requires roughly a 7 pp rise in unemployment, or 6 pp with a 40% house-price fall.
+- **BVAR scenarios:** the data-based 1-in-10 severe path raises unemployment by only 1.3 pp, so the configured severe
+  scenario is a tail well beyond the VAR's; the BVAR is a check on the baseline and weights, not a replacement.
+- **Full chain vs reported PCL (FY2020-25, excluding cards):** model C$225m vs reported C$363m, correlation 0.83;
+  less than half of FY2024-25 is explained. In-sample for the PD equations.
+
+**5.5 Automated tests (31, run in CI).**
 - **Stage engine:** conservation of gross loans; PCL = ΔACL + write-offs; both roll-forwards close; transfers net to zero;
   stress raises Stage 2 and the ACL; the 30 dpd floor binds; discounting lowers ECL; lifetime coverage exceeds 12-month
   coverage.
@@ -132,6 +145,8 @@ rather than calibrated away.
 - **End to end:** scenario ordering; the probability-weighted ACL lies within the scenario range; the card calibration holds;
   every champion is correctly signed.
 - **Reproducibility:** configuration validation; simulated data reproduces exactly.
+- **Extensions:** payment-shock arithmetic; panel signs; the loss distribution brackets the point estimate; the
+  reverse-stress grid is monotone; BVAR bands are ordered; the PCL backtest runs.
 
 ## 6. Limitations and compensating controls
 
@@ -142,7 +157,8 @@ rather than calibrated away.
 | Commercial champion fails the stress band | Conservative severe losses (over-predicts the GFC) and weaker calm-period accuracy | Flagged; full range across models shown |
 | Assumed LTV distribution, terms, workout | Allowance level sensitivity | All in config, editable in the app; staging and scenario-weight sensitivity disclosed |
 | Author-built scenarios | Not comparable with supervisory scenarios | Severe sized against the BoE 2025 test and Ontario's early-1990s downturn |
-| Short-rate level not used as a mortgage driver | Misses the 2023–26 renewal payment shock | Handle as an overlay or a separate payment-shock model |
+| Short-rate level not used as a mortgage driver | Misses the 2023–26 renewal payment shock | Payment-shock panel challenger (5.4); it narrows the gap but does not close it, so an overlay remains needed |
+| Bank-specific deterioration not visible in industry proxies | Model explains less than half of FY2024–25 PCL | Full-chain PCL backtest (5.4); loan-level PD model planned |
 
 ## 7. Monitoring and change control
 

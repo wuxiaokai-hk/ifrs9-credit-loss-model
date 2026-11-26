@@ -5,6 +5,7 @@
     creditloss run --config CONFIG [--backtest]
     creditloss backtest --config CONFIG
     creditloss report --config CONFIG      # HTML report for the last run of CONFIG
+    creditloss extensions --config CONFIG  # panel, payment shock, loss distribution, BVAR, PCL backtest
     creditloss app                         # launch the Streamlit app
 """
 from __future__ import annotations
@@ -46,6 +47,9 @@ def main(argv: list[str] | None = None) -> int:
     b.add_argument("--config", default=DEFAULT_CONFIG)
     rp = sub.add_parser("report", help="HTML report for the last run")
     rp.add_argument("--config", default=DEFAULT_CONFIG)
+    e = sub.add_parser("extensions", help="panel and payment shock, loss distribution, BVAR scenarios, PCL backtest")
+    e.add_argument("--config", default=str(PROJECT_ROOT / "config" / "eqb_public.yaml"))
+    e.add_argument("--draws", type=int, default=400, help="Monte Carlo draws for the loss distribution")
     a = sub.add_parser("app", help="launch the Streamlit app")
     a.add_argument("--port", default="8501")
     args = ap.parse_args(argv)
@@ -66,6 +70,9 @@ def main(argv: list[str] | None = None) -> int:
         run_backtest(args.config)
     elif args.cmd == "report":
         print("Report:", _report(args.config))
+    elif args.cmd == "extensions":
+        from creditloss.extensions.report import run as run_ext
+        print("Extensions:", run_ext(args.config, n_draws=args.draws))
     elif args.cmd == "app":
         return subprocess.call([sys.executable, "-m", "streamlit", "run", str(PROJECT_ROOT / "streamlit_app.py"),
                                 "--server.port", args.port])

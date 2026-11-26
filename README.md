@@ -76,7 +76,7 @@ pip install -e ".[dev]"
 creditloss app                                                 # the interactive app (http://localhost:8501)
 creditloss run --config config/eqb_public.yaml                 # projection with the validated champions (~10 s)
 creditloss run --config config/eqb_public.yaml --backtest --report   # re-validate every PD model, then project
-pytest -q                                                      # 25 tests
+pytest -q                                                      # 31 tests
 ```
 
 Without the `creditloss` command, the same pipeline runs as a plain script, `run_pipeline.py`. Its defaults sit in a
@@ -86,6 +86,7 @@ SETTINGS block at the top of the file, and flags override them:
 python run_pipeline.py                                   # EQB book, validated PD models, HTML report
 python run_pipeline.py --config config/sample.yaml       # simulated credit-union book
 python run_pipeline.py --build-data --backtest --report  # everything, from the raw public files
+python run_pipeline.py --extensions                      # plus the model extensions below (~1 min)
 ```
 
 Or with Docker: `docker build -t creditloss . && docker run -p 8501:8501 creditloss`.
@@ -102,6 +103,7 @@ change. Step by step: [`docs/DEPLOY.md`](docs/DEPLOY.md).
 | `creditloss report --config C` | HTML report from the last run |
 | `creditloss build-data` | Rebuild the EQB inputs from the raw public files (reproduces them byte for byte) |
 | `creditloss simulate` | Regenerate the simulated credit-union book |
+| `creditloss extensions --config C` | Provincial panel and payment shock, loss distribution, reverse stress test, BVAR scenarios, PCL backtest → `outputs/<config>/extensions/` |
 | `creditloss app` | Launch the Streamlit app |
 
 ## Methodology
@@ -160,6 +162,24 @@ out-of-sample backtest (re-selection at every origin) ─► champion PD model p
   over-predicts the GFC (336%) and is less accurate than AR(1) in calm periods. It is kept as the conservative choice
   and flagged in [`docs/MODEL_CARD.md`](docs/MODEL_CARD.md).
 
+### Extensions: challengers and checks
+
+`creditloss extensions` (or `python run_pipeline.py --extensions`) runs five further analyses on the EQB book and writes
+[`outputs/eqb_public/extensions/extensions.html`](outputs/eqb_public/extensions/extensions.html) with CSV tables. They
+challenge the main model; they do not change its numbers.
+
+| Analysis | Result |
+|---|---|
+| **Renewal payment shock** (payment on a 5-year-old mortgage repriced at today's rate) | Wrong-signed pooled across regions; positive and significant in Ontario (t 2.7). About +30% in 2025–26. |
+| **Provincial panel** (CBA arrears in 5 regions, StatCan unemployment, 1999–2026) | Sharper unemployment effect (t 5.9 vs 2.0). Out of sample, no model beats Ontario UR+HPI significantly, and all miss the 2023–26 rise in Ontario arrears. Kept as a challenger. |
+| **Loss distribution** (coefficient and residual uncertainty, 400 draws) | Severe 13-quarter loss: median C$1.47bn, 90% range C$1.00–2.32bn. Baseline: C$0.46–0.80bn. |
+| **Reverse stress test** (unemployment hump × house-price fall on the baseline) | C$2bn needs about a 7 pp unemployment rise with no house-price fall, or 6 pp with a 40% fall. Losses are driven mostly by unemployment, as only uninsured mortgages carry house-price risk. |
+| **BVAR scenarios** (Minnesota prior; severity bands give the weights) | The VAR's 1-in-10 severe path is mild (+1.3 pp unemployment): the configured severe scenario sits well beyond the VAR's tail. |
+| **Full chain vs EQB's reported PCL**, FY2020–25, excluding cards | Model C$225m vs reported C$363m, correlation 0.83. Close in FY2022–23; misses the FY2021 release unless given the actual proxy path, and explains less than half of FY2024–25, when EQB's losses rose faster than the industry proxies. |
+
+Canadian data and sources: [`data/canada/SOURCES.md`](data/canada/SOURCES.md). A loan-level PD model (Freddie Mac
+single-family data, free after registration) is the next step and is not yet included.
+
 ## Data
 
 - **EQB book:** balances, stage shares, allowances and impaired loans from EQB's Q3 2026 report to shareholders.
@@ -184,10 +204,11 @@ creditloss/            package
   validation/          backtest, Diebold-Mariano, stress capture, champion rule
   reporting/           charts, Excel workbook, HTML reports
   pipelines/           projection pipeline used by the CLI and the app
+  extensions/          provincial panel, payment shock, loss distribution, BVAR, PCL backtest
   cli.py               `creditloss` command
 streamlit_app.py       the app
 config/                eqb_public.yaml, sample.yaml, literature / sign-prior tables
-data/                  eqb_public/ (public inputs + raw files), sample/ (simulated)
+data/                  eqb_public/ (public inputs + raw files), canada/ (provincial data), sample/ (simulated)
 outputs/               shipped results for both configurations
 docs/                  reports, model card, screenshots
 tests/                 unit and end-to-end tests

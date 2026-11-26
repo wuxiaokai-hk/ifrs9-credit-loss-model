@@ -7,7 +7,7 @@ gh auth login                                   # once
 ./scripts/publish_to_github.sh <your-github-username> public     # or private
 ```
 
-The script fills your username into the README badges, makes the first commit and pushes. CI (lint, 25 tests, a CLI
+The script fills your username into the README badges, makes the first commit and pushes. CI (lint, 31 tests, a CLI
 run) starts on the first push. Without the GitHub CLI: create an empty repository named `ifrs9-credit-loss-model` on
 github.com, then `git init -b main && git add -A && git commit -m "v1.0.0" && git remote add origin <url> && git push -u origin main`.
 

@@ -4,6 +4,8 @@
     python run_pipeline.py --config config/sample.yaml       # simulated credit-union book
     python run_pipeline.py --backtest                        # re-run the out-of-sample backtest first (minutes)
     python run_pipeline.py --build-data --backtest --report  # everything, from the raw public files
+    python run_pipeline.py --extensions                      # plus panel, payment shock, loss distribution,
+                                                             # BVAR scenarios and the PCL backtest (~1 min)
 
 Or edit the SETTINGS block below and just run `python run_pipeline.py` (handy in Spyder, VS Code or a notebook:
 `%run run_pipeline.py`). Command-line flags override the settings.
@@ -13,6 +15,7 @@ Steps, in order:
     2. backtest     out-of-sample test of every PD model; the champions it picks are saved and reused
     3. projection   scenario losses, IFRS 9 allowance and provisions, Excel workbook, charts
     4. report       HTML report
+    +  extensions   outputs/eqb_public/extensions/ (HTML page, CSV tables)
 Results go to the `outputs` folder named in the config (outputs/eqb_public/ or outputs/sample/).
 """
 from __future__ import annotations
@@ -30,6 +33,7 @@ CONFIG = "config/eqb_public.yaml"      # or "config/sample.yaml", or your own co
 BUILD_DATA = False                     # rebuild the public inputs from data/eqb_public/raw first
 BACKTEST = False                       # re-validate the PD models (slow); False reuses the saved champions
 REPORT = True                          # write the HTML report
+EXTENSIONS = False                     # also run the model extensions (EQB config; about a minute)
 # --------------------------------------------------------------------------
 
 
@@ -61,6 +65,8 @@ def main(argv: list[str] | None = None) -> dict:
     ap.add_argument("--build-data", action="store_true", default=BUILD_DATA, help="rebuild public inputs first")
     ap.add_argument("--backtest", action="store_true", default=BACKTEST, help="re-run the out-of-sample backtest")
     ap.add_argument("--report", action=argparse.BooleanOptionalAction, default=REPORT, help="write the HTML report")
+    ap.add_argument("--extensions", action=argparse.BooleanOptionalAction, default=EXTENSIONS,
+                    help="also run the extensions: provincial panel, payment shock, loss distribution, BVAR, PCL backtest")
     args = ap.parse_args(argv)
 
     config = Path(args.config)
@@ -87,6 +93,14 @@ def main(argv: list[str] | None = None) -> dict:
         print("[4/4] Writing the HTML report …")
         from creditloss.cli import _report
         print("Report:", _report(str(config)))
+
+    if args.extensions:
+        if config.stem != "eqb_public":
+            print("--extensions uses the EQB public data; skipped for this config.")
+        else:
+            print("[+] Running the model extensions …")
+            from creditloss.extensions.report import run as run_ext
+            print("Extensions:", run_ext(str(config)))
 
     print("\n" + summary_table(res))
     from creditloss.utils.config import load_config
